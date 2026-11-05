@@ -56,7 +56,7 @@ fun HomeScreen(navController: NavController, viewModel: NoteViewModel = hiltView
                 value = searchQuery, onValueChange = { viewModel.updateSearchQuery(it) }, placeholder = { Text("Search notes...", color = Color.Gray) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Gray) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), shape = RoundedCornerShape(24.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = Color.Transparent, focusedBorderColor = Color.Transparent, containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.Transparent, focusedBorderColor = Color.Transparent, unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant, focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant),
                 singleLine = true
             )
             if (notes.isEmpty()) {
