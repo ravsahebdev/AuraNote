@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -62,11 +63,12 @@ fun SplashScreen(navController: NavController) {
                 .alpha(alpha.value)
         ) {
             Image(
-                painter = painterResource(id = R.mipmap.ic_launcher),
+                painter = painterResource(id = R.mipmap.ic_launcher_foreground),
                 contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier
                     .size(110.dp)
                     .clip(RoundedCornerShape(28.dp))
+.background(colorResource(R.color.ic_launcher_background))
             )
 
             Spacer(modifier = Modifier.height(24.dp))

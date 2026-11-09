@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,11 +64,12 @@ fun AppNavigationDrawerContent(
                         .padding(horizontal = 24.dp, vertical = 16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.mipmap.ic_launcher),
+                        painter = painterResource(id = R.mipmap.ic_launcher_foreground),
                         contentDescription = stringResource(R.string.app_name),
                         modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
+.background(colorResource(R.color.ic_launcher_background))
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
