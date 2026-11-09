@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
@@ -50,6 +51,7 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     
@@ -76,9 +78,27 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // JSON serialization
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // Biometrics
+    implementation("androidx.biometric:biometric:1.1.0")
+
+    // Image loading with Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
     
     // Testing Dependencies
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("androidx.room:room-testing:$room_version")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
