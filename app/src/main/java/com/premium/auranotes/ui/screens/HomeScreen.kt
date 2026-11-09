@@ -51,6 +51,10 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val sectionTodayLabel = stringResource(R.string.section_today)
+    val sectionPrevious7Label = stringResource(R.string.section_previous_7_days)
+    val sectionPrevious30Label = stringResource(R.string.section_previous_30_days)
+    val sectionOlderLabel = stringResource(R.string.section_older)
 
     var showFabMenu by remember { mutableStateOf(false) }
     var showSortDialog by remember { mutableStateOf(false) }
@@ -491,10 +495,10 @@ fun HomeScreen(
                             val thirtyDays = 30L * oneDay
 
                             val sections = listOf(
-                                stringResource(R.string.section_today) to unpinnedNotes.filter { now - it.updatedAt < oneDay },
-                                stringResource(R.string.section_previous_7_days) to unpinnedNotes.filter { (now - it.updatedAt) in oneDay until sevenDays },
-                                stringResource(R.string.section_previous_30_days) to unpinnedNotes.filter { (now - it.updatedAt) in sevenDays until thirtyDays },
-                                stringResource(R.string.section_older) to unpinnedNotes.filter { now - it.updatedAt >= thirtyDays }
+                                sectionTodayLabel to unpinnedNotes.filter { now - it.updatedAt < oneDay },
+                                sectionPrevious7Label to unpinnedNotes.filter { (now - it.updatedAt) in oneDay until sevenDays },
+                                sectionPrevious30Label to unpinnedNotes.filter { (now - it.updatedAt) in sevenDays until thirtyDays },
+                                sectionOlderLabel to unpinnedNotes.filter { now - it.updatedAt >= thirtyDays }
                             ).filter { it.second.isNotEmpty() }
 
                             for ((sectionTitle, sectionNotes) in sections) {
@@ -610,10 +614,10 @@ fun HomeScreen(
                             val thirtyDays = 30L * oneDay
 
                             val listSections = listOf(
-                                stringResource(R.string.section_today) to unpinnedNotes.filter { now - it.updatedAt < oneDay },
-                                stringResource(R.string.section_previous_7_days) to unpinnedNotes.filter { (now - it.updatedAt) in oneDay until sevenDays },
-                                stringResource(R.string.section_previous_30_days) to unpinnedNotes.filter { (now - it.updatedAt) in sevenDays until thirtyDays },
-                                stringResource(R.string.section_older) to unpinnedNotes.filter { now - it.updatedAt >= thirtyDays }
+                                sectionTodayLabel to unpinnedNotes.filter { now - it.updatedAt < oneDay },
+                                sectionPrevious7Label to unpinnedNotes.filter { (now - it.updatedAt) in oneDay until sevenDays },
+                                sectionPrevious30Label to unpinnedNotes.filter { (now - it.updatedAt) in sevenDays until thirtyDays },
+                                sectionOlderLabel to unpinnedNotes.filter { now - it.updatedAt >= thirtyDays }
                             ).filter { it.second.isNotEmpty() }
 
                             for ((sectionTitle, sectionNotes) in listSections) {

@@ -46,7 +46,7 @@ class EditorViewModel @Inject constructor(
     private val repository: NoteRepository,
     private val reminderManager: ReminderManager,
     private val preferencesManager: PreferencesManager,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val navNoteId: Int = savedStateHandle.get<Int>("noteId") ?: 0

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.premium.auranotes.data.*
 import com.premium.auranotes.repository.NoteRepository
+import com.premium.auranotes.util.NoteExportUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -83,45 +84,90 @@ class NoteViewModel @Inject constructor(
         }
     }.flatMapLatest { it }
 
-    val uiState: StateFlow<HomeUiState> = combine(
-        rawNotesFlow,
-        foldersWithCount,
+    private data class FilterState(
+        val category: NoteCategory,
+        val folderId: Long?,
+        val screen: DrawerScreen,
+        val query: String,
+        val searchExpanded: Boolean
+    )
+
+    private data class SelectionState(
+        val multiSelect: Boolean,
+        val selectedIds: Set<Int>,
+        val pinnedExpanded: Boolean
+    )
+
+    private data class CountsState(
+        val active: Int,
+        val favorite: Int,
+        val scheduled: Int,
+        val archived: Int,
+        val trash: Int
+    )
+
+    private val filterState = combine(
         _selectedCategory,
         _selectedFolderId,
         _currentDrawerScreen,
         _searchQuery,
-        _isSearchExpanded,
+        _isSearchExpanded
+    ) { category, folderId, screen, query, searchExp ->
+        FilterState(category, folderId, screen, query, searchExp)
+    }
+
+    private val selectionState = combine(
         _isMultiSelectMode,
         _selectedNoteIds,
-        _isPinnedSectionExpanded,
-        userPreferences,
+        _isPinnedSectionExpanded
+    ) { multiSelect, selectedIds, pinnedExp ->
+        SelectionState(multiSelect, selectedIds, pinnedExp)
+    }
+
+    private val countsState = combine(
         activeCount,
         favoriteCount,
         scheduledCount,
         archivedCount,
         trashCount
-    ) { notes, folders, category, folderId, screen, query, searchExp, multiSelect, selectedIds, pinnedExp, prefs, actCnt, favCnt, schCnt, arcCnt, trshCnt ->
+    ) { act, fav, sch, arc, trsh ->
+        CountsState(act, fav, sch, arc, trsh)
+    }
 
-        val sortedNotes = sortNotes(notes, prefs.sortOrder)
+    private val contentState = combine(
+        rawNotesFlow,
+        foldersWithCount,
+        userPreferences
+    ) { notes, folders, prefs ->
+        Triple(notes, folders, prefs)
+    }
+
+    val uiState: StateFlow<HomeUiState> = combine(
+        contentState,
+        filterState,
+        selectionState,
+        countsState
+    ) { content, filter, selection, counts ->
+        val (notes, folders, prefs) = content
 
         HomeUiState(
-            notes = sortedNotes,
+            notes = sortNotes(notes, prefs.sortOrder),
             folders = folders,
-            selectedCategory = category,
-            selectedFolderId = folderId,
-            currentDrawerScreen = screen,
-            searchQuery = query,
-            isSearchExpanded = searchExp,
-            isMultiSelectMode = multiSelect,
-            selectedNoteIds = selectedIds,
-            isPinnedSectionExpanded = pinnedExp,
+            selectedCategory = filter.category,
+            selectedFolderId = filter.folderId,
+            currentDrawerScreen = filter.screen,
+            searchQuery = filter.query,
+            isSearchExpanded = filter.searchExpanded,
+            isMultiSelectMode = selection.multiSelect,
+            selectedNoteIds = selection.selectedIds,
+            isPinnedSectionExpanded = selection.pinnedExpanded,
             viewMode = prefs.viewMode,
             sortOrder = prefs.sortOrder,
-            activeCount = actCnt,
-            favoriteCount = favCnt,
-            scheduledCount = schCnt,
-            archivedCount = arcCnt,
-            trashCount = trshCnt
+            activeCount = counts.active,
+            favoriteCount = counts.favorite,
+            scheduledCount = counts.scheduled,
+            archivedCount = counts.archived,
+            trashCount = counts.trash
         )
     }.stateIn(
         viewModelScope,
